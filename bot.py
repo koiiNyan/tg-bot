@@ -24,6 +24,7 @@ def main():
     dp.add_handler(CommandHandler("calculate", calculate, pass_args=True))
     dp.add_handler(CommandHandler("wcalc", wcalc, pass_args=True))
     dp.add_handler(CommandHandler("help", helpp))
+    dp.add_handler(CommandHandler("moon", moon))
 
 
     mybot.start_polling()
@@ -205,9 +206,18 @@ def helpp(bot, update):
     /planet planetname - tells you the position of the planet
     /wordcount message - counts the words in your message
     /calculate 1+1= (+, -, *, /) - simple calculator
-    /wcalc one plus one (minus, multiply, divide) - you can use words instead of numbers"""
+    /wcalc one plus one (minus, multiply, divide) - you can use words instead of numbers
+    /moon - tells you when the next full moon is"""
 
     update.message.reply_text(text)
+
+
+def moon(bot, update):
+    text = '/moon'
+    print(text)
+    next_full_moon = ephem.next_full_moon(date)
+    update.message.reply_text("Next full moon: {}".format(next_full_moon))
+
 
 logging.info("Bot started")
 main()
