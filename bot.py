@@ -1,7 +1,7 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-PROXY = {'proxy_url': 'socks5://t1.learn.python.ru:1080',
-    'urllib3_proxy_kwargs': {'username': 'learn', 'password': 'python'}}
+PROXY = {'proxy_url': 'socks5://u0k12.tgproxy.me:1080',
+    'urllib3_proxy_kwargs': {'username': 'telegram', 'password': 'telegram'}}
 
 import logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -10,11 +10,11 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     )
 import settings
 import ephem
-import datetime
-date = datetime.datetime.now()
+from datetime import datetime
+date = datetime.now()
 
 def main():
-    mybot = Updater(settings.TELEGRAM_KEY)
+    mybot = Updater(settings.TELEGRAM_KEY, request_kwargs=PROXY)
     
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
@@ -25,6 +25,7 @@ def main():
     dp.add_handler(CommandHandler("wcalc", wcalc, pass_args=True))
     dp.add_handler(CommandHandler("help", helpp))
     dp.add_handler(CommandHandler("moon", moon))
+    dp.add_handler(CommandHandler("date", currdate))
 
 
     mybot.start_polling()
@@ -207,7 +208,8 @@ def helpp(bot, update):
     /wordcount message - counts the words in your message
     /calculate 1+1= (+, -, *, /) - simple calculator
     /wcalc one plus one (minus, multiply, divide) - you can use words instead of numbers
-    /moon - tells you when the next full moon is"""
+    /moon - tells you when the next full moon is
+    /date - tells you the current date"""
 
     update.message.reply_text(text)
 
@@ -219,6 +221,12 @@ def moon(bot, update):
     update.message.reply_text("Next full moon: {}".format(next_full_moon))
 
 
+def currdate(bot, update):
+    text = '/date'
+    print(text)
+    currdate = (date.strftime ('%d.%m.%Y %H:%M'))
+    update.message.reply_text("Current date: {}".format(currdate))
+
+
 logging.info("Bot started")
 main()
-
