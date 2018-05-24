@@ -9,6 +9,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO,
                     filename='bot.log'
                     )
+import functions
 import settings
 import ephem
 from datetime import datetime
@@ -27,7 +28,7 @@ def main():
     dp.add_handler(CommandHandler("help", helpp))
     dp.add_handler(CommandHandler("moon", moon))
     dp.add_handler(CommandHandler("date", currdate))
-    dp.add_handler(CommandHandler("extcalc", ext_calc, pass_args=True))
+    dp.add_handler(CommandHandler("extcalc", functions.ext_calc, pass_args=True))
     dp.add_handler(CommandHandler("cities", cities, pass_args=True))
 
 
@@ -213,7 +214,8 @@ def helpp(bot, update):
     /wcalc one plus one (minus, multiply, divide) - you can use words instead of numbers
     /moon - tells you when the next full moon is
     /date - tells you the current date
-    /cities - игра в города (на русском) Пример: /cities Москва"""
+    /cities - игра в города (на русском) Пример: /cities Москва
+    /extcalc - extended calculator, usage: /extcalc 1+1-2+3/4"""
 
     update.message.reply_text(text)
 
@@ -231,19 +233,7 @@ def currdate(bot, update):
     currdate = (date.strftime ('%d.%m.%Y %H:%M'))
     update.message.reply_text("Current date: {}".format(currdate))
 
-def ext_calc(bot, update, args):
-    text = '/extcalc'
-    print(text)
-    logging.info(update.message.text)
 
-    custom_keyboard = [['1', '2', '3', '+'], 
-                       ['4', '5', '6', '-'],
-                       ['7', '8', '9', '*'],
-                       ['0', '/', '=']]
-    reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    bot.send_message(chat_id=update.message.chat.id,
-                     text='Enter the number',  
-                     reply_markup=reply_markup)
 
 
 
@@ -289,67 +279,3 @@ main()
 
 
 
-"""
-
-    custom_keyboard = [['1', '2', '3', '+'], 
-                       ['4', '5', '6', '-'],
-                       ['7', '8', '9', '*'],
-                       ['0', '/', '=']]
-    reply_markup = telegram.InlineKeyboardMarkup(custom_keyboard)
-    bot.send_message(chat_id=update.message.chat.id,
-                     text='Enter the number',  
-                     reply_markup=reply_markup)
-
-
-def calculator(string):
-    
-    try:
-
-        string = string.lower().replace(" ", "") 
-        parts = string.split("+") 
-
-        for plus in range(len(parts)): 
-            if "-" in parts[plus]:
-                parts[plus] = parts[plus].split("-")
-
-
-        for plus in range (len(parts)):
-            parts[plus] = precalculator(parts[plus])
-
-        result = sum(parts)
-    except ValueError:
-        result = "Enter numbers, please!"
-    except ZeroDivisionError:
-        result = "Can't divide by zero!"
-    return result
-
-
-
-    def precalculator(part):
-        if type(part) is str:
-
-            if "*" in part:
-                result = 1
-                for subpart in part.split("*"):
-                    result *= precalculator(subpart)
-                return result
-        
-
-            elif "/" in part:
-                parts = list(map(precalculator, part.split("/")))
-                result = parts[0]
-                for subpart in parts[1:]:
-                    result /= subpart
-                return result
-
-            else:
-                return float(part)
-
-        elif type(part) is list:
-            for i in range(len(part)):
-                part[i] = precalculator(part[i])
-
-            return part[0] - sum(part[1:])
-        return part
-
-        """
