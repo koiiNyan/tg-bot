@@ -23,7 +23,7 @@ def main():
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
     dp.add_handler(CommandHandler("planet", functions.planet, pass_args=True))
     dp.add_handler(CommandHandler("wordcount", functions.wordcount, pass_args=True))
-    dp.add_handler(CommandHandler("calculate", functions.calculate, pass_args=True))
+    dp.add_handler(CommandHandler("c", functions.calculate, pass_args=True, pass_user_data=True))
     dp.add_handler(CommandHandler("wcalc", functions.wcalc, pass_args=True))
     dp.add_handler(CommandHandler("help", helpp))
     dp.add_handler(CommandHandler("moon", functions.moon))
@@ -41,6 +41,7 @@ def greet_user(bot, update):
 Use /help for more info""".format(update.message.chat.first_name)
     print(text)
     update.message.reply_text(text1)
+    bot.send_photo(chat_id=update.message.chat.id, photo='https://st2.depositphotos.com/6227888/11531/v/450/depositphotos_115312282-stock-illustration-hello-lettering-can-use-for.jpg')
 
 
 
@@ -59,7 +60,6 @@ def helpp(bot, update):
     text = """I understand the following commands: 
     /planet planetname - tells you the position of the planet
     /wordcount message - counts the words in your message
-    /calculate 1+1= (+, -, *, /) - simple calculator
     /wcalc one plus one (minus, multiply, divide) - you can use words instead of numbers
     /moon - tells you when the next full moon is
     /date - tells you the current date

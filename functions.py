@@ -71,64 +71,66 @@ def wordcount(bot, update, args):
 
 
 
-def calculate(bot, update, args):
-    """
+def calculate(bot, update, args, user_data):
 
 
-
-
-
-
-    custom_keyboard = [['1', '2', '3', '+'], 
-                       ['4', '5', '6', '-'],
-                       ['7', '8', '9', '*'],
-                       ['0', '/', '=']]
+    custom_keyboard = [['/c 1', '/c 2', '/c 3', '/c +'], 
+                       ['/c 4', '/c 5', '/c 6', '/c -'],
+                       ['/c 7', '/c 8', '/c 9', '/c *'],
+                       ['/c 0', '/c /', '/c =']]
     reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
     bot.send_message(chat_id=update.message.chat.id,
                      text='Enter the number',  
                      reply_markup=reply_markup)
-"""
 
-
+                     
     text = '/calculate'
-    print(text)
+    msg = update.message.text.split(' ')[-1]
     logging.info(update.message.text)
-    
-    try:
+    if 'calc' not in user_data:
+        user_data['calc'] = ''
         
-        if len(args) == 1:
-            if '+' in args[0]:
-                elements = args[0][:-1].split('+')
+    if msg == "=":
+        
+        try:
+        
+            if '+' in user_data['calc']:
+                elements = user_data['calc'].split('+')
                 answer = sum(map(int, elements))
                 update.message.reply_text("Answer: {}".format(answer))
-    
-            elif '-' in args[0]:
-                elements = args[0][:-1].split('-')
-                answer = int(elements[0]) - int(elements[1])
+
+            elif '-' in user_data['calc']:
+                elements = user_data['calc'].split('-')
+                answer = int(str(elements[0])) - int(str(elements[1]))
                 update.message.reply_text("Answer: {}".format(answer))
-    
-            elif '*' in args[0]:
-                elements = args[0][:-1].split('*')
+
+            elif '*' in user_data['calc']:
+                elements = user_data['calc'].split('*')
                 answer = int(elements[0]) * int(elements[1])
                 update.message.reply_text("Answer: {}".format(answer))
-    
-            elif '/' in args[0]:
+
+            elif '/' in user_data['calc']:
                 try:
-                    elements = args[0][:-1].split('/')
+                    elements = user_data['calc'].split('/')
                     answer = int(elements[0]) / int(elements[1])
                     update.message.reply_text("Answer: {}".format(answer))
                 except ZeroDivisionError:
                     zeroerr = update.message.reply_text("Can't divide by zero!")
                     return zeroerr
 
-        else:
-            spaceserr = update.message.reply_text("Don't use spaces please! Usage of bot: /calculate 1+1=")
-            return spaceserr
+            # else:
+            #     spaceserr = update.message.reply_text("Don't use spaces please! Usage of bot: /calculate 1+1=")
+            #     return spaceserr
 
-    except IndexError:
-        inderr = spaceserr = update.message.reply_text("""Error: You haven't entered the numbers :c
-            Usage of bot: /calculate 1+1=""" )
-        return inderr
+        except IndexError:
+            inderr = spaceserr = update.message.reply_text("""Error: You haven't entered the numbers :c
+                Usage of bot: /calculate 1+1=""" )
+            return inderr
+
+        print(user_data['calc'])
+        user_data['calc'] = ''
+        return
+    user_data['calc'] += msg
 
 
 
